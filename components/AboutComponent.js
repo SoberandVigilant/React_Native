@@ -3,6 +3,7 @@ import { FlatList, ScrollView, Text } from 'react-native';
 import { Card, ListItem } from 'react-native-elements';
 import { CAMPSITES } from '../shared/campsites';
 import { PARTNERS } from '../shared/partners';
+import Loading from './LoadingComponent';
 
 function Mission() {
     return (
@@ -35,29 +36,51 @@ class About extends Component {
         title: 'About Us'
     }
 
+
     render() {
         const renderPartner = ({ item }) => {
             return (
                 <ListItem
                     title={item.name}
                     subtitle={item.description}
-                    leftAvatar={{ source: require('./images/bootstrap-logo.png') }}
-
+                    leftAvatar={{ source: { uri: baseUrl + item.image } }}
                 />
-
             );
         };
+
+        if (this.props.partners.isLoading) {
+            return (
+                <ScrollView>
+                    <Mission />
+                    <Card
+                        title='Community Partners'>
+                        <Loading />
+                    </Card>
+                </ScrollView>
+            );
+        }
+        if (this.props.partners.errMess) {
+            return (
+                <ScrollView>
+                    <Mission />
+                    <Card
+                        title='Community Partners'>
+                        <Text>{this.props.partners.errMess}</Text>
+                    </Card>
+                </ScrollView>
+            );
+        }
         return (
             <ScrollView>
                 <Card title="Community Partners">
-                  <Mission />
+                    <Mission />
                     <FlatList
                         data={this.state.partners}
                         renderItem={renderPartner}
                         keyExtractor={item => item.id.toString()}
                     />
                 </Card>
-                
+
             </ScrollView>
         );
 

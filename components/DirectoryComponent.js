@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import { FlatList } from 'react-native';
+import Loading from './LoadingComponent';
+import { View, FlatList, Text } from 'react-native';
 import { ListItem } from 'react-native-elements';
 import { CAMPSITES } from '../shared/campsites';
+
 
 class Directory extends Component {
 
@@ -18,18 +20,29 @@ class Directory extends Component {
 
     render() {
         const { navigate } = this.props.navigation;
-        const renderDirectoryItem = ({item}) => {
+        const renderDirectoryItem = ({ item }) => {
             return (
                 <ListItem
                     title={item.name}
                     subtitle={item.description}
                     onPress={() => navigate('CampsiteInfo', { campsiteId: item.id })}
-                    leftAvatar={{ source: require('./images/react-lake.jpg')}}
+                    leftAvatar={{ source: require('./images/react-lake.jpg') }}
                 />
             );
         };
+        if (this.props.campsites.isLoading) {
+            return <Loading />;
 
+        }
+        if (this.props.campsites.errMess) {
+            return (
+                <View>
+                    <Text>{this.props.campsites.errMess}</Text>
+                </View>
+            );
+        }
         return (
+
             <FlatList
                 data={this.state.campsites}
                 renderItem={renderDirectoryItem}
