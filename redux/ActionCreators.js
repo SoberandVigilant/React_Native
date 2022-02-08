@@ -54,6 +54,25 @@ export const fetchCampsites = () => dispatch => {
         .catch(error => dispatch(campsitesFailed(error.message)));
 };
 
+export const postComment = (campsiteId, rating, author, text) => (dispatch) => {
+    const newComment = {
+        campsiteId,
+        rating,
+        author,
+        text
+    }
+    
+    newComment.date= new Date().toISOString();
+    setTimeout(() => {dispatch(addComment(newComment));
+    }, 2000);
+
+};
+export const addComment = comment => ({
+    type: ActionTypes.ADD_COMMENT,
+    payload: comment
+});
+
+
 export const campsitesLoading = () => ({
     type: ActionTypes.CAMPSITES_LOADING
 });
@@ -141,3 +160,8 @@ export const addPartners = partners => ({
     type: ActionTypes.ADD_PARTNERS,
     payload: partners
 });
+
+export const deleteFavorite = campsiteId => ({
+    type: ActionTypes.DELETE_FAVORITE,
+    payload: campsiteId
+}); 
